@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    name: study
+    url: jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&autoReconnectForPools=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC
+    username: root
+    password: 516516
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  application:
+    name: springcloud-demo-mvcservice
+
+  resources:
+    static-locations: classpath:/static/
+
+  thymeleaf:
+    prefix:
+      classpath: prefix:classpath:/templates/
+    cache: false
+    suffix: .html
+    encoding: UTF-8
+
+
+server:
+  port: 8080
+  servlet:
+    context-path: /mvc-service
+
+
+mybatis:
+  mapper-locations: classpath:com/springcloud/personal/system/springclouddemomvcservice/mapper/*.xml
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

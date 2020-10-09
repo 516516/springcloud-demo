@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springcloud.personal.system.springclouddemomvcservice.mapper.MathMapper">
+  <resultMap id="BaseResultMap" type="com.springcloud.personal.system.springclouddemomvcservice.bean.Math">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="factor_id" jdbcType="BIGINT" property="factorId" />
+    <result column="column_1" jdbcType="DECIMAL" property="column1" />
+    <result column="column_2" jdbcType="DECIMAL" property="column2" />
+    <result column="column_3" jdbcType="DECIMAL" property="column3" />
+    <result column="math_code" jdbcType="VARCHAR" property="mathCode" />
+    <result column="math_name" jdbcType="VARCHAR" property="mathName" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, factor_id, column_1, column_2, column_3, math_code, math_name, update_time, update_user, 
+    create_time, create_user
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from math
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from math
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.springcloud.personal.system.springclouddemomvcservice.bean.Math" useGeneratedKeys="true">
+    insert into math (factor_id, column_1, column_2, 
+      column_3, math_code, math_name, 
+      update_time, update_user, create_time, 
+      create_user)
+    values (#{factorId,jdbcType=BIGINT}, #{column1,jdbcType=DECIMAL}, #{column2,jdbcType=DECIMAL}, 
+      #{column3,jdbcType=DECIMAL}, #{mathCode,jdbcType=VARCHAR}, #{mathName,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.springcloud.personal.system.springclouddemomvcservice.bean.Math" useGeneratedKeys="true">
+    insert into math
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="factorId != null">
+        factor_id,
+      </if>
+      <if test="column1 != null">
+        column_1,
+      </if>
+      <if test="column2 != null">
+        column_2,
+      </if>
+      <if test="column3 != null">
+        column_3,
+      </if>
+      <if test="mathCode != null">
+        math_code,
+      </if>
+      <if test="mathName != null">
+        math_name,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="factorId != null">
+        #{factorId,jdbcType=BIGINT},
+      </if>
+      <if test="column1 != null">
+        #{column1,jdbcType=DECIMAL},
+      </if>
+      <if test="column2 != null">
+        #{column2,jdbcType=DECIMAL},
+      </if>
+      <if test="column3 != null">
+        #{column3,jdbcType=DECIMAL},
+      </if>
+      <if test="mathCode != null">
+        #{mathCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mathName != null">
+        #{mathName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.springcloud.personal.system.springclouddemomvcservice.bean.Math">
+    update math
+    <set>
+      <if test="factorId != null">
+        factor_id = #{factorId,jdbcType=BIGINT},
+      </if>
+      <if test="column1 != null">
+        column_1 = #{column1,jdbcType=DECIMAL},
+      </if>
+      <if test="column2 != null">
+        column_2 = #{column2,jdbcType=DECIMAL},
+      </if>
+      <if test="column3 != null">
+        column_3 = #{column3,jdbcType=DECIMAL},
+      </if>
+      <if test="mathCode != null">
+        math_code = #{mathCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mathName != null">
+        math_name = #{mathName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.springcloud.personal.system.springclouddemomvcservice.bean.Math">
+    update math
+    set factor_id = #{factorId,jdbcType=BIGINT},
+      column_1 = #{column1,jdbcType=DECIMAL},
+      column_2 = #{column2,jdbcType=DECIMAL},
+      column_3 = #{column3,jdbcType=DECIMAL},
+      math_code = #{mathCode,jdbcType=VARCHAR},
+      math_name = #{mathName,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

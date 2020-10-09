@@ -1,0 +1,16 @@
+# 应用名称
+spring:
+  application:
+    name: springcloud-demo-eurekaservice
+
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
