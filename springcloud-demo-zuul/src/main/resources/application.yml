@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: springcloud-demo-zuul
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+zuul:
+  routes:
+    springcloud-demo-mvcservice:
+      path: /api-mvc/**
+
+    springcloud-demo-eurekaclient1:
+      path: /api-eurekaclient1/**
+
+
+#http://localhost:8083/actuator/routes/details
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'routes'
