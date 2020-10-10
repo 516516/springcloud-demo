@@ -12,6 +12,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
 
+# http://localhost:8083/api-mvc/mvc-service/demo/query?mathId=1
 zuul:
   routes:
     springcloud-demo-mvcservice:
@@ -21,7 +22,7 @@ zuul:
       path: /api-eurekaclient1/**
 
 
-#http://localhost:8083/actuator/routes/details
+# http://localhost:8083/actuator/routes/details
 management:
   endpoints:
     web:
