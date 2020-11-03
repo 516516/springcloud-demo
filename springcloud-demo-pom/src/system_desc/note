@@ -18,7 +18,7 @@ IDEA启动多个实例参考：
     1.业务服务1-增删查改
     2.访问路径
     3.使用组件
-        1.【  @EnableDiscoveryClient 】: 向服务中心注册服务
+        1.【  @EnableDiscoveryClient  】: 向服务中心注册服务
     4.服务间调用方式
 
 
