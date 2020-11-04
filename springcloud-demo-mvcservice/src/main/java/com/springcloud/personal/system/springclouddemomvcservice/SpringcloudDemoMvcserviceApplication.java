@@ -11,11 +11,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-@EnableEurekaClient
-@EnableDiscoveryClient
-@SpringBootApplication
-@EnableFeignClients
-@EnableHystrix
+@EnableEurekaClient//向服务中心注册一个【服务】
+@EnableDiscoveryClient//【@LoadBalanced 负载均衡】 向服务中心注册一个【ribbon】【服务间的调用模式：ribbon+restTemplate】
+@SpringBootApplication//springboot启动配置
+@EnableFeignClients//开启Fegin的功能【服务间调用模式：Fegin】
+@EnableHystrix//开启断路器功能
 @MapperScan("com.springcloud.personal.system.springclouddemomvcservice.mapper")
 public class SpringcloudDemoMvcserviceApplication {
 
