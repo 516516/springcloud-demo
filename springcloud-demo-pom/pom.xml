@@ -47,5 +47,7 @@
     <module>../springcloud-demo-eurekaservice</module>
     <module>../springcloud-demo-eurekaclient1</module>
     <module>../springcloud-demo-zuul</module>
+    <module>../springcloud-demo-config-server</module>
+    <module>../springcloud-demo-config-git</module>
   </modules>
 </project>

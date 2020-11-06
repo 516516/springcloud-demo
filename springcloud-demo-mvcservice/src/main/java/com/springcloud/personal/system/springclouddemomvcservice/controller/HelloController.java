@@ -4,6 +4,7 @@ import com.springcloud.personal.system.springclouddemomvcservice.process.Request
 import com.springcloud.personal.system.springclouddemomvcservice.service.FeignClientService;
 import com.springcloud.personal.system.springclouddemomvcservice.service.HelloService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,5 +74,13 @@ public class HelloController {
         bean.setPersonId(personId);
         return helloService.hystrixById(bean);
     }
+
+    @Value("${foo}")
+    String foo;
+    @RequestMapping(value="/hi")
+    public String hi(){
+        return foo;
+    }
+
 
 }

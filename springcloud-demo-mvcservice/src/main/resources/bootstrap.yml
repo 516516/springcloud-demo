@@ -19,6 +19,14 @@ spring:
     suffix: .html
     encoding: UTF-8
 
+  # 配置中心服务
+  cloud:
+    config:
+      label: master
+      profile: dev
+      uri: http://localhost:8084/
+      port: 8084
+
 
 server:
   port: 8080
@@ -38,3 +46,5 @@ eureka:
 feign:
   hystrix:
     enabled: true
+
+
