@@ -63,7 +63,8 @@ IDEA启动多个实例参考：
 
 6.spirngcloud-demo-config-service
     1.配置中心
-    2.访问路径  http://localhost:8084/foo/dev
+    2.访问路径  http://localhost:8084/springcloud-demo-mvcservice/dev
     3.使用组件
-        1.【 @EnableConfigServer 】
-    4.网关配置
+        1.【 @EnableConfigServer 】注册Config Server
+    4.配置中心服务配置
+        1.springcloud-demo-mvcservice-dev.properties   : 项目名.环境.properties
