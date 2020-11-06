@@ -7,6 +7,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
+import org.springframework.cloud.netflix.turbine.EnableTurbine;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication//springboot启动配置
 @EnableFeignClients//开启Fegin的功能【服务间调用模式：Fegin】
 @EnableHystrix//开启断路器功能
+@EnableHystrixDashboard//断路器监控功能开启
 @MapperScan("com.springcloud.personal.system.springclouddemomvcservice.mapper")
 public class SpringcloudDemoMvcserviceApplication {
 

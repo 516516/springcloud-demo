@@ -1,5 +1,7 @@
 package com.springcloud.personal.system.springclouddemomvcservice.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.springcloud.personal.system.springclouddemomvcservice.process.RequestBean;
 import com.springcloud.personal.system.springclouddemomvcservice.service.FeignClientService;
 import com.springcloud.personal.system.springclouddemomvcservice.service.HelloService;
@@ -19,6 +21,10 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("demo")
 public class HelloController {
+
+
+    @Value("${server.port}")
+    String port;
 
     @Autowired
     HelloService helloService;
@@ -82,5 +88,15 @@ public class HelloController {
         return foo;
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/json", method = RequestMethod.POST)
+    public HashMap<String,Object> getOneMathByJson(@RequestBody JSONObject bean){
+        System.out.println("json server port:"+port+"  "+ JSON.toJSONString(bean));
+        HashMap<String,Object> result=new HashMap<>();
+        result.put("code",1);
+        result.put("msg","success");
+        result.put("data",helloService.getOneById(bean.getLong("mathId")));
+        return result;
+    }
 
 }

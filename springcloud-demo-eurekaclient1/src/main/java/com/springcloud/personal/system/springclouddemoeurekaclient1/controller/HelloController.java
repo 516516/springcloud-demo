@@ -3,6 +3,7 @@ package com.springcloud.personal.system.springclouddemoeurekaclient1.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.springcloud.personal.system.springclouddemoeurekaclient1.process.RequestBean;
+import com.springcloud.personal.system.springclouddemoeurekaclient1.process.RequestMathBean;
 import com.springcloud.personal.system.springclouddemoeurekaclient1.service.HelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,22 @@ public class HelloController {
         result.put("data",helloService.getOnePersonById(1L));
         return result;
     }
+
+    @ResponseBody
+    @PostMapping(value = "queryWithHystrix")
+    public HashMap<String,Object> getOneMathById(HttpServletRequest request){
+        System.out.println("server port:"+port);
+        System.out.println(JSON.toJSONString(request.getParameterMap()));
+        RequestMathBean queryBean=new RequestMathBean();
+        queryBean.setMathId(Long.valueOf(request.getParameter("mathId")));
+        HashMap<String,Object> result=new HashMap<>();
+        result.put("code",1);
+        result.put("msg","success");
+        result.put("data",helloService.hystrixById(queryBean));
+        return result;
+    }
+
+
 
     @ResponseBody
     @RequestMapping(value = "/object", method = RequestMethod.POST)

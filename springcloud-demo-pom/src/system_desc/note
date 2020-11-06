@@ -5,13 +5,23 @@ IDEA启动多个实例参考：
     1.https://blog.csdn.net/forezp/article/details/76408139
 
 
-项目搭建说明：
+应用启动顺序:
+1.springcloud-demo-eurekaservice
+2.springcloud-demo-config-server
+3.springcloud-demo-eurekaclient1
+4.springcloud-demo-mvcservice
+5.springcloud-demo-zuul
+
+
+=应用服务集群搭建说明：
+============================================================================
 1.springcloud-demo-eurekaservice:
-    1.注册中心
+    1.注册中心【应用服务的注册中心】
     2.访问路径   http://localhost:8761
     3.使用组件
         【  @EnableEurekaServer 】: 注册中心
-
+    4.集群部署:【成千上万个服务向它注册】
+        1.  高可用的配置如何搭建   https://blog.csdn.net/forezp/article/details/81041101  【就不做演示了】
 
 
 2.springcloud-demo-eurekaclient1:
@@ -22,17 +32,17 @@ IDEA启动多个实例参考：
     4.服务间调用方式
 
 
-
 3.springcloud-demo-mvcservice:
     1.业务服务2-增删查改【模拟服务2】
     2.访问路径   http://localhost:8080/mvc-service/demo/query?mathId=1
     3.使用组件
-        1.【  @EnableDiscoveryClient 】: 向服务中心注册服务
+        1.【  @EnableEurekaClient  】//向服务中心注册一个【服务】
         2.【  @EnableDiscoveryClient  】:【服务调用】【@LoadBalanced 负载均衡】 向服务中心注册一个【ribbon】【服务间的调用模式：ribbon+restTemplate】
         3.【  @EnableFeignClients  】:【服务调用】开启Fegin的功能【服务间调用模式：Fegin】
         4.【  @EnableHystrix  】:【熔断器开启】【Feign自己也是带断路器的】
     4.服务间调用方式
-
+    5.服务配置获取
+        1.从配置中心获取配置，配置文件修改为 bootstrap.yml 【加载优先级：bootstrap.yml>application.yml】
 
 
 4.springcloud-demo-pom:
@@ -40,6 +50,8 @@ IDEA启动多个实例参考：
 
 
 
+=网关集群搭建说明：
+========================================================================
 5.springcloud-demo-zuul:
     1.网关服务
     2.访问路径
@@ -61,10 +73,95 @@ IDEA启动多个实例参考：
 
 
 
-6.spirngcloud-demo-config-service
+=配置中心集群搭建说明：
+=================================================================================
+6.springcloud-demo-config-git
+    1.存配置文件维护--便于维护项目的配置，做成了一个项目，便于随时提交配置
+    2.访问路径
+        https://github.com/516516/springcloud-demo
+    3.使用组件
+        无
+    4.配置项具体配置规则
+         1.springcloud-demo-mvcservice-dev.properties   : 项目名.环境.properties
+
+7.spirngcloud-demo-config-service
     1.配置中心
     2.访问路径  http://localhost:8084/springcloud-demo-mvcservice/dev
     3.使用组件
         1.【 @EnableConfigServer 】注册Config Server
+        2.【 @EnableEurekaClient 】//向服务中心注册一个【服务】【集群部署】
     4.配置中心服务配置
-        1.springcloud-demo-mvcservice-dev.properties   : 项目名.环境.properties
+
+
+
+=暂时略过  消息总线   RocketMQ部分：https://blog.csdn.net/weixin_42073629/article/details/106535326
+================================================================================
+
+
+
+=服务链路追踪
+=下载 zipkin-server   https://dl.bintray.com/openzipkin/maven/io/zipkin/java/zipkin-server/
+================================================================================
+    1.链路追踪服务
+    2.访问路径：http://127.0.0.1:9411/
+    3.使用组件
+        1.【 zipkin-server 】:直接下载使用、目前放在  springcloud-demo-pom\src\zipkin-server下
+        2.启动命令：
+    4.配置中心【需要链路追踪的服务配置文件中添加配置】【具体配置查看服务】
+
+
+
+=断路器监控【单个系统的断路器监控】
+=================================================================================
+    1.断路器监控【springcloud-demo-mvcservice】【单应用监控】
+    2.访问路径：
+        1.http://localhost:8080/mvc-service/hystrix
+        输入参数：
+        1.http://localhost:8080/mvc-service/actuator/hystrix.stream
+        2.2000ms
+        3.应用名称：springcloud-demo-mvcservice
+
+        4.测试访问接口：
+            1.http://localhost:8080/mvc-service/demo/queryPersonByHystricCall?personId=1
+
+    3.使用组件
+        1.【 @EnableHystrixDashboard 】//断路器监控功能开启
+        2.【 @HystrixCommand 】//断路器
+    4.配置中心
+        参考服务springcloud-demo-mvcservice pom文件配置
+
+
+
+    1.断路器监控【springcloud-demo-eurekaclient1】【单应用监控】
+    2.访问路径：
+        1.http://localhost:8081/mvc2-service/hystrix
+        输入参数：
+        1.http://localhost:8081/mvc2-service/actuator/hystrix.stream
+        2.2000ms
+        3.应用名称：springcloud-demo-eurekaclient1
+
+        4.测试访问接口：
+            1.http://localhost:8081/mvc2-service/demo/queryWithHystrix?mathId=1
+
+    3.使用组件
+        1.【 @EnableHystrixDashboard 】//断路器监控功能开启
+        2.【 @HystrixCommand 】//断路器
+    4.配置中心
+        参考服务springcloud-demo-eurekaclient1 pom文件配置
+
+
+
+=断路器聚合监控【整个系统的断路器监控】【搭建失败】【失败】
+=================================================================================
+    1.断路器聚合监控【开启断路器的所有系统均可监控】
+    2.访问路径
+        1.http://localhost:8080/mvc-service/hystrix
+        2.输入参数：
+        http://localhost:8080/mvc-service/turbine.stream
+        1.http://localhost:8080/mvc-service/turbine.stream
+        2.2000ms
+        3.eee
+    3.使用组件
+        1.【 @EnableTurbine 】开启应用断路器聚合监控
+        2.【 @HystrixCommand 】//断路器框开启
+    4.配置中心
