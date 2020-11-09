@@ -50,5 +50,6 @@
     <module>../springcloud-demo-config-server</module>
     <module>../springcloud-demo-config-git</module>
     <module>../springcloud-demo-trubine</module>
+    <module>../springcloud-demo-gateway</module>
   </modules>
 </project>

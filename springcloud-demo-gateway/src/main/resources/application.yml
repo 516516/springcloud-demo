@@ -1,0 +1,143 @@
+spring:
+  application:
+    name: springcloud-demo-gateway
+
+  resources:
+    static-locations: classpath:/static/
+
+#  profiles:
+#    active: elapse_route
+
+server:
+  port: 8086
+
+#filter  自定义过滤器工厂 【RequestTimeGatewayFilterFactory】
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: elapse_route
+          uri: http://localhost:8080/
+          filters:
+            - RequestTime=false
+          predicates:
+            - After=2017-01-20T17:42:47.789-07:00[America/Denver]
+  profiles: elapse_route
+
+
+#filter  RewritePath  过滤器
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: rewritepath_route
+          uri: http://localhost:8080/
+          predicates:
+            - Path=/mvc/**
+          filters:
+            - RewritePath=/mvc/(?<segment>.*), /$\{segment}
+  profiles: rewritepath_route
+
+#filter  AddResponseHeader  过滤器
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: add_request_header_route
+          uri: http://localhost:8080/
+          filters:
+            - AddResponseHeader=X-Request-Foo, Bar
+#            - AddRequestHeader=X-Request-Foo, Bar
+          predicates:
+            - After=2017-01-20T17:42:47.789-07:00[America/Denver]
+  profiles: add_request_header_route
+
+
+#predicate  断言 ：路由匹配
+
+#after_route
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: after_route
+          uri: http://localhost:8080/
+          predicates:
+            - After=2020-01-20T17:42:47.789-07:00[America/Denver]
+  profiles: after_route
+
+#header_route
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: header_route
+          uri: http://localhost:8080/
+          predicates:
+            - Header=X-Request-Id, \d+
+  profiles: header_route
+
+#cookie_route
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: cookie_route
+          uri: http://localhost:8080/
+          predicates:
+            - Cookie=name, bobo
+  profiles: cookie_route
+
+#host_route
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: host_route
+          uri: http://localhost:8080/
+          predicates:
+            - Host=**.boubou.com
+  profiles: host_route
+
+#method_route
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: method_route
+          uri: http://localhost:8080/
+          predicates:
+            - Method=POST
+  profiles: method_route
+
+#path_route
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: path_route
+          uri: http://localhost:8080/
+          predicates:
+            - Path=/mvc-service/{segment}/{segment1}
+  profiles: path_route
+
+#query_route
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: query_route
+          uri: http://localhost:8080/
+          predicates:
+            - Query=mathId, \d+
+  profiles: query_route

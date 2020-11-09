@@ -114,6 +114,7 @@ IDEA启动多个实例参考：
 
 =断路器监控【单个系统的断路器监控】
 =================================================================================
+8.springcloud-demo-trubine
     1.断路器监控【springcloud-demo-mvcservice】【单应用监控】
     2.访问路径：
         1.http://localhost:8080/mvc-service/hystrix
@@ -171,13 +172,87 @@ IDEA启动多个实例参考：
 
 =Spring Cloud Gateway  网关
 =================================================================================
-    1.网关服务--替代zuul
-    2.访问路径
-    3.使用组件
-    4.相关配置
+9.springcloud-demo-gateway
+
+    1.网关服务 -- 替代zuul   作用：【路由转发、权限校验、限流控制】
+        1.网关的作用：
+            1.协议转换，路由转发【参考第2点】
+            2.流量聚合，对流量进行监控，日志输出
+            3.作为整个系统的前端工程，对流量进行控制，有限流的作用
+            4.作为系统的前端边界，外部流量只能通过网关才能访问系统
+            5.可以在网关层做权限的判断
+            6.可以在网关层做缓存
+
+    2.predicate 【路由匹配的几种规则】
+        【SpringcloudDemoGatewayApplication】
+            1. http://localhost:8086/mvc-service/demo/index
+        【application.yml  after_route：】
+            1.http://localhost:8086/mvc-service/demo/query?mathId=1
+        【application.yml  header_route：】
+            1.http://localhost:8086/mvc-service/demo/query?mathId=1
+        【application.yml  cookie_route：】【postman中Cookie设置：Header-->Cookie-->name=bobo】
+            1.http://localhost:8086/mvc-service/demo/query?mathId=1
+        【application.yml  host_route：】【postman中Host设置：Header-->Host-->www.boubou.com】
+            1.http://localhost:8086/mvc-service/demo/query?mathId=1
+        【application.yml  method_route：】
+            1.http://localhost:8086/mvc-service/demo/query?mathId=1
+        【application.yml  path_route：】
+            1.http://localhost:8086/mvc-service/demo/query?mathId=1
+        【application.yml  query_route：】
+            1.http://localhost:8086/mvc-service/demo/query?mathId=1
+
+    3.filter过滤器的使用【服务边界】【Spring Cloud Gateway内置了【19种】强大的过滤器工厂】【自己定义自己的过滤器】
+        源码部分：【org.springframework.cloud.gateway.filter.factory】
+        【类型：】
+            -2.“pre”类型的过滤器可以做参数校验、权限校验、流量监控、日志输出、协议转换
+            -1.在“post”类型的过滤器中可以做响应内容、响应头的修改，日志的输出，流量监控等
+        【作用范围：】
+            1.GlobalFilter：全局过滤器
+                1.全局过滤器，不需要在配置文件中配置，作用在所有的路由上
+                2.通过GatewayFilterAdapter包装成GatewayFilterChain可识别的过滤器
+                3.相关全局过滤器，参考： https://blog.csdn.net/forezp/article/details/85057268
+                4.自定义全局过滤器
+            2.GatewayFilter：
+                1.需要通过spring.cloud.routes.filters 配置在具体路由下，只作用在当前路由上
+                2.或通过spring.cloud.default-filters配置在全局，作用在所有路由上
+
+        【请求路径：】
+        【application.yml  add_request_header_route：】
+            1.http://localhost:8086/mvc-service/demo/query?mathId=1
+        【application.yml  rewritepath_route：】
+            1.http://localhost:8086/mvc/mvc-service/demo/query?mathId=1
+        【自定义过滤器 filter：customerRouteLocator 】【@Bean的方式  实例化过滤器Bean】
+        【自定义过滤器工厂】【 RequestTimeGatewayFilterFactory 】
+        【全局过滤器】
+            0.定义：
+                1.参考：TokenFilter
+            1.请求路径：
+                1.http://localhost:8086/mvc-service/demo/query?mathId=1&token=123
+
+    4.使用组件
+    5.相关配置 -- 参考 springcloud-demo-gateway
 
 
+==Spring Cloud Gateway  网关--限流篇
+=================================================================================
+    1.限流：
+        1.大量的请求使服务器过载，导致服务不可用
+        2.防止网络攻击
+    2.一般限流都是在网关这一层做：
+        比如Nginx、Openresty、kong、zuul、Spring Cloud Gateway等
+    3.常见的限流算法：
+        1.计数器算法
+            1.实现方式：
+                1.第一个请求进来开始计时，在接下去的1s内，每来一个请求，就把计数加1，如果累加的数字达到了100，那么后续的请求就会被全部拒绝。
+                2.AtomicLong#incrementAndGet()方法来给计数器加1并返回最新值，通过这个最新值和阈值进行比较。
+            2.【优点缺点】：“突刺现象”----1s内的前10ms，已经通过了100个请求，那后面的990ms，只能眼巴巴的把请求拒绝
 
+        2.漏桶算法
+            1.思想：不管服务调用方多么不稳定，通过漏桶算法进行限流，每10毫秒处理一次请求。
+            2.实现：准备一个队列，用来保存请求，另外通过一个线程池（ScheduledExecutorService）来定期从队列中获取请求并执行，可以一次性获取多个并发执行。
+            3.优点：消除"突刺现象"
+            4.缺点：无法应对短时间的突发流量
 
-
-
+        3.令牌桶算法
+            1.思想：漏桶算法的一种改进，桶算法能够限制请求调用的速率，而令牌桶算法能够在【限制调用的平均速率的同时还允许一定程度的突发调用】
+            2.实现：可以准备一个队列，用来保存令牌，另外通过一个线程池定期生成令牌放到队列中，每来一个请求，就从队列中获取一个令牌，并继续执行。
